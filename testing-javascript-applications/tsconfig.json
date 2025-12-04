@@ -33,6 +33,6 @@
     // Ensures that any non-empty case inside a switch statement includes either break, return, or throw.
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "tests"],
+  "include": ["src", "tests", "knex.config.ts"],
   "exclude": ["node_modules"]
 }
