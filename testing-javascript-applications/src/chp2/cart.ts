@@ -1,38 +1,31 @@
-import { CartItem } from "./cart.type";
+import { Insertable, InsertResult } from "kysely";
+import { db } from "../db";
+import { Cart, CartItem } from "../db/db";
 
-export class Cart {
-  private readonly items: CartItem[];
-  public constructor() {
-    this.items = [];
+export async function createCart(
+  newCart: Insertable<Cart>,
+): Promise<InsertResult> {
+  try {
+    return await db
+      .insertInto("cart")
+      .values(newCart)
+      .executeTakeFirstOrThrow();
+  } catch (error: unknown) {
+    console.error("Failed to insert cart: ", { error });
+    throw error;
   }
+}
 
-  /**
-   * Adds the given item to cart
-   * @param {CartItem} item The item to be added to cart.
-   * @returns {void}
-   */
-  public addToCart(item: CartItem): void {
-    this.items.push(item);
-  }
-
-  /**
-   * Returns the items in the cart
-   * @returns {CartItem[]} The items in the cart.
-   */
-  public getItems(): CartItem[] {
-    return this.items;
-  }
-
-  /**
-   * Removes the given item from the cart
-   * @param {CartItem} item - The item to be removed from cart.
-   * @returns {boolean} True if the item was removed, false otherwise.
-   */
-  public removeCartItem(item: CartItem): boolean {
-    const itemIndex = this.items.indexOf(item);
-    const isInCart = itemIndex !== -1;
-    if (!isInCart) return false;
-    this.items.splice(itemIndex, 1);
-    return true;
+export async function addCartItem(
+  newCartItem: Insertable<CartItem>,
+): Promise<InsertResult> {
+  try {
+    return await db
+      .insertInto("cartItem")
+      .values(newCartItem)
+      .executeTakeFirstOrThrow();
+  } catch (error: unknown) {
+    console.error("Failed to insert cart item into cart: ", { error });
+    throw error;
   }
 }

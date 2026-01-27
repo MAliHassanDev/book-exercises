@@ -5,19 +5,21 @@
 
 import type { ColumnType } from "kysely";
 
-export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S, I | undefined, U>
-  : ColumnType<T, T | undefined, T>;
+export type Generated<T> =
+  T extends ColumnType<infer S, infer I, infer U>
+    ? ColumnType<S, I | undefined, U>
+    : ColumnType<T, T | undefined, T>;
 
 export interface Cart {
   createdAt: Generated<string>;
-  id: Generated<number | null>;
+  id: Generated<number>;
   username: string;
 }
 
 export interface CartItem {
+  cartId: number;
   createdAt: Generated<string>;
-  id: Generated<number | null>;
+  id: Generated<number>;
   name: string;
 }
 

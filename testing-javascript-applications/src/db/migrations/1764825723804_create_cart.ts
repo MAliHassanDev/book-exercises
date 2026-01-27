@@ -3,9 +3,9 @@ import { sql, type Kysely } from "kysely";
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable("cart")
-    .addColumn("id", "integer", (c) => c.primaryKey().autoIncrement())
+    .addColumn("id", "integer", (c) => c.primaryKey().notNull().autoIncrement())
     .addColumn("username", "varchar(150)", (c) => c.notNull())
-    .addColumn("created_at", "timestamp", (c) =>
+    .addColumn("createdAt", "timestamp", (c) =>
       c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
     .addUniqueConstraint("uniqueCartUsername", ["username"])
@@ -13,9 +13,11 @@ export async function up(db: Kysely<any>): Promise<void> {
 
   await db.schema
     .createTable("cart_item")
-    .addColumn("id", "integer", (c) => c.primaryKey().autoIncrement())
+    .addColumn("id", "integer", (c) => c.notNull().primaryKey().autoIncrement())
+    .addColumn("cartId", "integer", (c) => c.notNull())
+    .addForeignKeyConstraint("", ["cartId"], "cart", ["id"])
     .addColumn("name", "varchar(255)", (c) => c.notNull())
-    .addColumn("created_at", "timestamp", (c) =>
+    .addColumn("createdAt", "timestamp", (c) =>
       c.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
     .execute();
