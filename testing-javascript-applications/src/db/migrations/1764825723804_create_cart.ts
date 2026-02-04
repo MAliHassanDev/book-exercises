@@ -12,7 +12,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .execute();
 
   await db.schema
-    .createTable("cart_item")
+    .createTable("cartItem")
     .addColumn("id", "integer", (c) => c.notNull().primaryKey().autoIncrement())
     .addColumn("cartId", "integer", (c) => c.notNull())
     .addForeignKeyConstraint("", ["cartId"], "cart", ["id"])
@@ -24,6 +24,6 @@ export async function up(db: Kysely<any>): Promise<void> {
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable("cart_item").execute();
+  await db.schema.dropTable("cartItem").execute();
   await db.schema.dropTable("cart").execute();
 }

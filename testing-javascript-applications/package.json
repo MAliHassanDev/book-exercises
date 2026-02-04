@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
+    "server:dev": "bun run --watch  src/chp2/server.ts",
     "migrate:latest": "kysely migrate latest",
     "migrate:down": "kysely migrate down",
     "migrate:rollback": "kysely migrate rollback --all",
@@ -18,9 +19,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
+    "@types/bun": "^1.3.8",
     "@types/node": "^24.10.9",
     "kysely-codegen": "^0.19.0",
     "kysely-ctl": "^0.20.0",

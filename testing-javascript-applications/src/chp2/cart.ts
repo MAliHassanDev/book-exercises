@@ -1,6 +1,7 @@
-import { Insertable, InsertResult } from "kysely";
-import { db } from "../db";
-import { Cart, CartItem } from "../db/db";
+import { type Insertable, InsertResult } from "kysely";
+
+import { type Cart, type CartItem } from "../db/db.js";
+import { db } from "../db/index.js";
 
 export async function createCart(
   newCart: Insertable<Cart>,
