@@ -1,36 +1,46 @@
+import Express from "express";
+
+const server = Express();
+
 export interface CartItem {
   name: string;
 }
 
 const cartItems = new Map<string, CartItem[]>();
+const inventory = new Map<CartItem["name"], number>();
 
-const server = Bun.serve({
-  port: 3000,
-  routes: {
-    "/": () => {
-      return new Response("Hello, World!");
-    },
-    "/carts/:username/items": {
-      POST: async (req) => {
-        const cartItem = (await req.json()) as CartItem;
-
-        const { username } = req.params;
-        const userCartItems = cartItems.get(username) || [];
-        userCartItems.push(cartItem);
-        cartItems.set(username, userCartItems);
-        return Response.json(cartItem, { status: 201 });
-      },
-
-      GET: (req) => {
-        const { username } = req.params;
-        const cart = cartItems.get(username);
-        if (!cart) {
-          return Response.json({ error: "Cart not found" }, { status: 404 });
-        }
-        return Response.json(cart);
-      },
-    },
-  },
+server.get("/", (_, res) => {
+  res.json({ message: "Hello, World!" });
 });
 
-console.log(`Server running on ${server.url}`);
+server.post("/carts/:username/items", async (req, res) => {
+  const cartItem = req.body as CartItem;
+
+  if (!inventory.has(cartItem.name)) {
+    return res.status(404).json({ error: "Item not in inventory" });
+  }
+
+  const itemQuantity = inventory.get(cartItem.name)!;
+  if (itemQuantity <= 0) {
+    return res.status(409).json({ error: "Item is out of stock" });
+  }
+
+  inventory.set(cartItem.name, itemQuantity - 1);
+
+  const { username } = req.params;
+  const userCartItems = cartItems.get(username) || [];
+  userCartItems.push(cartItem);
+  cartItems.set(username, userCartItems);
+  return res.status(201).json(cartItem);
+});
+
+server.get("/carts/:username/items", (req, res) => {
+  const { username } = req.params;
+  const userCartItems = cartItems.get(username) || [];
+  return res.json(userCartItems);
+});
+
+const PORT = 3000;
+
+server.listen(PORT);
+console.log(`Server running on http://localhost:${PORT}`);

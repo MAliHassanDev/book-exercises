@@ -23,6 +23,8 @@
     // create source map files for the emitted javascript files
     "sourceMap": true,
 
+    "types": ["vitest/globals"],
+
     /* ---------------------------------------- Linting ------------------------------- */
     // enables strict type checking
     "strict": true,
