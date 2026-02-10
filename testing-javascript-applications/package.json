@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
-    "server:dev": "tsx --watch  src/chp2/server.ts",
+    "server:dev": "tsx --watch  src/server/server.ts",
     "migrate:latest": "kysely migrate latest",
     "migrate:down": "kysely migrate down",
     "migrate:rollback": "kysely migrate rollback --all",

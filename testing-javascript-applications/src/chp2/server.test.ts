@@ -1,4 +1,4 @@
-import type { CartItem } from "./server.js";
+import type { CartItem } from "../server/server.js";
 import { describe, expect, it } from "vitest";
 
 describe("Cart API", () => {

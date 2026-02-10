@@ -1,20 +1,25 @@
 import Express from "express";
 
-const server = Express();
-
 export interface CartItem {
   name: string;
 }
 
-const cartItems = new Map<string, CartItem[]>();
-const inventory = new Map<CartItem["name"], number>();
+export const carts = new Map<string, CartItem[]>();
 
-server.get("/", (_, res) => {
+export const inventory = new Map<CartItem["name"], number>();
+
+const app = Express();
+
+app.use(Express.json());
+
+app.get("/", (_, res) => {
   res.json({ message: "Hello, World!" });
 });
 
-server.post("/carts/:username/items", async (req, res) => {
+app.post("/carts/:username/items", async (req, res) => {
   const cartItem = req.body as CartItem;
+
+  console.log("Received cart item:", cartItem);
 
   if (!inventory.has(cartItem.name)) {
     return res.status(404).json({ error: "Item not in inventory" });
@@ -28,19 +33,19 @@ server.post("/carts/:username/items", async (req, res) => {
   inventory.set(cartItem.name, itemQuantity - 1);
 
   const { username } = req.params;
-  const userCartItems = cartItems.get(username) || [];
+  const userCartItems = carts.get(username) || [];
   userCartItems.push(cartItem);
-  cartItems.set(username, userCartItems);
+  carts.set(username, userCartItems);
   return res.status(201).json(cartItem);
 });
 
-server.get("/carts/:username/items", (req, res) => {
+app.get("/carts/:username/items", (req, res) => {
   const { username } = req.params;
-  const userCartItems = cartItems.get(username) || [];
+  const userCartItems = carts.get(username) || [];
   return res.json(userCartItems);
 });
 
 const PORT = 3000;
 
-server.listen(PORT);
+app.listen(PORT);
 console.log(`Server running on http://localhost:${PORT}`);
