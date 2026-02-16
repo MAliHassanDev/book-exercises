@@ -1,5 +1,6 @@
 import { CartItem } from "../server/server.js";
 import { carts, inventory } from "../server/server.js";
+import { addToInventory, getInventory } from "./inventoryControler.js";
 
 describe("addItem", () => {
   const mockItem: CartItem = {
@@ -37,6 +38,7 @@ describe("addItem", () => {
   });
 });
 
+// -------- HELPERS -----------------
 const API_ROOT = "http://localhost:3000";
 
 function addItem(username: string, item: CartItem) {
